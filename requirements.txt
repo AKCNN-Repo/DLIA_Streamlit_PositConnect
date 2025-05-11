@@ -1,6 +1,5 @@
 streamlit
-pandas
-numpy
-plotly
-scipy
-tkinter
+plotly>=5.18
+pandas>=1.5
+numpy>=1.22
+scipy>=1.10
