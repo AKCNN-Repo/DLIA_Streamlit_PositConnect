@@ -62,13 +62,36 @@ if mean_metrics_file is not None and temp_vol_file is not None:
     elif plot_type == 'Filtered':
         filtered_smoothed_data = smooth_data(filtered_data[selected_column], window_size)
         time_series_fig.add_trace(go.Scatter(x=filtered_data['Time'], y=filtered_smoothed_data, mode='lines', name=f'Filtered Smoothed {selected_column}'))
-
+    # Update layout for time series plot
     time_series_fig.update_layout(
-        yaxis=dict(title=selected_column, titlefont=dict(color='blue'), tickfont=dict(color='blue'), title_standoff=20, domain=[0, 0.85]),
-        yaxis2=dict(title='Temperature / Volume', titlefont=dict(color='orange'), tickfont=dict(color='orange'), overlaying='y', side='right', title_standoff=40, anchor='free', position=0.86),
+        yaxis=dict(
+            title=dict(text=selected_column, font=dict(color='blue')),  # Updated titlefont
+            tickfont=dict(color='blue'),
+            title_standoff=20,
+            domain=[0, 0.85]
+        ),
+        yaxis2=dict(
+            title=dict(text='Temperature / Volume', font=dict(color='orange')),  # Updated titlefont
+            tickfont=dict(color='orange'),
+            overlaying='y',
+            side='right',
+            title_standoff=40,
+            anchor='free',
+            position=0.86
+        ),
         xaxis=dict(title='Time [hour]'),
         margin=dict(l=50, r=180, t=50, b=50),
-        legend=dict(x=1.05, y=1, xanchor='left', yanchor='top', traceorder='normal', font=dict(family='sans-serif', size=12, color='#000'), bgcolor='#E2E2E2', bordercolor='#FFFFFF', borderwidth=2)
+        legend=dict(
+            x=1.05,
+            y=1,
+            xanchor='left',
+            yanchor='top',
+            traceorder='normal',
+            font=dict(family='sans-serif', size=12, color='#000'),
+            bgcolor='#E2E2E2',
+            bordercolor='#FFFFFF',
+            borderwidth=2
+        )
     )
 
     st.plotly_chart(time_series_fig)
@@ -79,7 +102,12 @@ if mean_metrics_file is not None and temp_vol_file is not None:
         if kde_data['column'] == selected_column:
             kde_fig.add_trace(go.Scatter(x=kde_data['x'], y=kde_data['y'], mode='lines', name=f"{selected_column} at Time {kde_data['time']}"))
 
-    kde_fig.update_layout(xaxis=dict(title=selected_column), yaxis=dict(title='Density'))
+    #kde_fig.update_layout(xaxis=dict(title=selected_column), yaxis=dict(title='Density'))
+    kde_fig.update_layout(
+        xaxis=dict(title=dict(text=selected_column)),  # Updated titlefont
+        yaxis=dict(title=dict(text='Density'))  # Updated titlefont
+    )
+
     st.plotly_chart(kde_fig)
 else:
     st.write("Please upload both files to proceed.")
