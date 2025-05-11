@@ -3,31 +3,16 @@ import pandas as pd
 import numpy as np
 import plotly.graph_objs as go
 from scipy.stats import gaussian_kde
-from tkinter import Tk, filedialog
-
-# Function to open file dialog and get file path
-def get_file_path(prompt):
-    root = Tk()
-    root.withdraw()  # Hide the root window
-    file_path = filedialog.askopenfilename(title=prompt, filetypes=[("CSV Files", "*.csv")])
-    root.destroy()
-    return file_path
-
-# File selection via Tkinter
+# File selection via Streamlit
 st.sidebar.write("Upload Metrics Files")
-if st.sidebar.button("Select Event Tracking Metrics File"):
-    mean_metrics_path = get_file_path("Select Event Tracking Metrics CSV File")
-    st.session_state.mean_metrics_path = mean_metrics_path
+mean_metrics_file = st.sidebar.file_uploader("Upload Event Tracking Metrics CSV File", type="csv", key="mean_metrics_file")
+temp_vol_file = st.sidebar.file_uploader("Upload iControl Data CSV File", type="csv", key="temp_vol_file")
 
-if st.sidebar.button("Select iControl Data File"):
-    temp_vol_path = get_file_path("Select iControl Data CSV File")
-    st.session_state.temp_vol_path = temp_vol_path
-
-# Ensure file paths exist in session state
-if 'mean_metrics_path' in st.session_state and 'temp_vol_path' in st.session_state:
+# Ensure files are uploaded
+if mean_metrics_file is not None and temp_vol_file is not None:
     # Load data
-    data = pd.read_csv(st.session_state.mean_metrics_path)
-    temp_vol_data = pd.read_csv(st.session_state.temp_vol_path)
+    data = pd.read_csv(mean_metrics_file)
+    temp_vol_data = pd.read_csv(temp_vol_file)
 
     # Ensure 'Time' is in numeric format for both datasets
     data['Time'] = pd.to_numeric(data['Time'])
@@ -97,5 +82,5 @@ if 'mean_metrics_path' in st.session_state and 'temp_vol_path' in st.session_sta
     kde_fig.update_layout(xaxis=dict(title=selected_column), yaxis=dict(title='Density'))
     st.plotly_chart(kde_fig)
 else:
-    st.write("Please select both files to proceed.")
+    st.write("Please upload both files to proceed.")
 
